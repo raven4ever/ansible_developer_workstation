@@ -1,0 +1,51 @@
+---
+- name: Install Git (Centos)
+  yum:
+    name: git
+    state: latest
+
+- name: Install Docker dependencies (Centos)
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    state: latest
+
+- name: Add Docker Repository (Centos)
+  get_url:
+    url: https://download.docker.com/linux/centos/docker-ce.repo
+    dest: /etc/yum.repos.d/docer-ce.repo
+
+- name: Install Docker (Centos)
+  yum:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+
+- name: Add user to Docker group (Centos)
+  user:
+    name: adrian
+    groups: docker
+    append: True
+
+- name: Enable & Start Docker service (Centos)
+  service:
+    name: docker
+    state: started
+    enabled: True
+
+- name: Add Microsoft repository (Centos)
+  yum_repository:
+    name: code
+    description: vscode
+    file: vscode
+    gpgkey: https://packages.microsoft.com/keys/microsoft.asc
+    baseurl: https://packages.microsoft.com/yumrepos/vscode
+
+- name: Install VSCode (Centos)
+  yum:
+    name: code
+    state: latest

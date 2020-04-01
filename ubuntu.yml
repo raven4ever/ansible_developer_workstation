@@ -1,0 +1,61 @@
+---
+- name: Install Git (Ubuntu)
+  apt:
+    name: git
+    state: latest
+
+- name: Install Docker dependencies (Ubuntu)
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: latest
+
+- name: Add Docker GPG apt Key (Ubuntu)
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add Docker Repository (Ubuntu)
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+
+- name: Install Docker (Ubuntu)
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: latest
+
+- name: Add user to Docker group (Ubuntu)
+  user:
+    name: adrian
+    groups: docker
+    append: True
+
+- name: Enable & Start Docker service (Ubuntu)
+  service:
+    name: docker
+    state: started
+    enabled: True
+
+- name: Install Microsoft key (Ubuntu)
+  apt_key:
+    url: https://packages.microsoft.com/keys/microsoft.asc
+    state: present
+
+- name: Add Microsoft repository (Ubuntu)
+  apt_repository:
+    repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+    filename: vscode
+    state: present
+
+- name: Install VSCode (Ubuntu)
+  apt:
+    name: code
+    state: latest
